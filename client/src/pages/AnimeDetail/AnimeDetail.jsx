@@ -24,7 +24,7 @@ function AnimeDetail() {
       
       console.log('Fetching anime with ID:', id);
       
-      // Fetch anime details - handle nested response
+      // Fetch anime details
       const detailsResponse = await getAnimeDetails(id);
       console.log('Full API Response:', detailsResponse);
       
@@ -41,11 +41,12 @@ function AnimeDetail() {
           
           // Handle nested episodes response
           if (episodesResponse.success && episodesResponse.data?.data?.episodes) {
-            setEpisodes(episodesResponse.data.data.episodes);
+            const episodesData = episodesResponse.data.data.episodes;
+            console.log('Episodes data:', episodesData);
+            setEpisodes(episodesData);
           }
         } catch (episodeError) {
           console.error('Error fetching episodes:', episodeError);
-          // Don't fail completely if episodes fail
         }
       } else {
         setError('Anime not found. The ID might be incorrect.');
@@ -57,6 +58,16 @@ function AnimeDetail() {
       );
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleEpisodeClick = (episode) => {
+    console.log('Episode clicked:', episode);
+    // The episodeId from the API should be in format like "anime-name-123?ep=456"
+    if (episode.episodeId) {
+      navigate(`/watch/${encodeURIComponent(episode.episodeId)}`);
+    } else {
+      console.error('Episode ID is missing:', episode);
     }
   };
 
@@ -247,16 +258,21 @@ function AnimeDetail() {
               <div className="episodes-section">
                 <h3>Episodes ({episodes.length})</h3>
                 <div className="episodes-grid">
-                  {episodes.slice(0, 24).map((episode) => (
-                    <button
-                      key={episode.episodeId}
-                      className="episode-button"
-                      onClick={() => navigate(`/watch/${episode.episodeId}`)}
-                      title={episode.title || `Episode ${episode.number}`}
-                    >
-                      EP {episode.number}
-                    </button>
-                  ))}
+                  {episodes.slice(0, 24).map((episode) => {
+                    // Extract just the episode ID part after ?ep=
+                    const episodeIdPart = episode.episodeId?.split('?ep=')[1] || episode.episodeId;
+                    
+                    return (
+                      <button
+                        key={episode.episodeId}
+                        className="episode-button"
+                        onClick={() => navigate(`/watch/${episodeIdPart}`)}
+                        title={episode.title || `Episode ${episode.number}`}
+                      >
+                        EP {episode.number}
+                      </button>
+                    );
+                  })}
                 </div>
                 {episodes.length > 24 && (
                   <p className="episodes-more">

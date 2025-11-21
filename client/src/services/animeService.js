@@ -52,9 +52,10 @@ export const getEpisodeSources = async (episodeId, server = 'hd-1', category = '
   try {
     console.log('Requesting episode sources:', { episodeId, server, category });
     
+    // Make sure we're sending the correct parameter name
     const response = await api.get('/anime/episode/sources', {
       params: { 
-        id: episodeId, 
+        id: episodeId,  // Our backend will forward this correctly
         server: server,
         category: category
       }

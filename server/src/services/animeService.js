@@ -2,11 +2,9 @@ const axios = require('axios');
 
 const API_BASE_URL = process.env.ANIWATCH_API_URL || 'https://aniwatch-api.vercel.app/api/v2/hianime';
 
-console.log('🌐 API Base URL:', API_BASE_URL);
-
 const apiClient = axios.create({
   baseURL: API_BASE_URL,
-  timeout: 15000,
+  timeout: 10000,
   headers: {
     'Content-Type': 'application/json'
   }
@@ -14,12 +12,9 @@ const apiClient = axios.create({
 
 exports.getHomeData = async () => {
   try {
-    console.log('🔍 Fetching home data from:', API_BASE_URL + '/home');
     const response = await apiClient.get('/home');
-    console.log('✅ Home data fetched successfully');
     return response.data;
   } catch (error) {
-    console.error('❌ Failed to fetch home data:', error.message);
     throw new Error(`Failed to fetch home data: ${error.message}`);
   }
 };
@@ -55,23 +50,32 @@ exports.getEpisodes = async (animeId) => {
 
 exports.getEpisodeSources = async (episodeId, server = 'hd-1', category = 'sub') => {
   try {
-    console.log('Fetching episode sources:', { episodeId, server, category });
+    console.log('=== Service Debug ===');
+    console.log('Episode ID:', episodeId);
+    console.log('Server:', server);
+    console.log('Category:', category);
     
     const response = await apiClient.get('/episode/sources', {
       params: { 
-        animeEpisodeId: episodeId,
+        animeEpisodeId: episodeId,  // Use just the episode ID (e.g., "145813")
         server: server,
         category: category
       }
     });
     
-    console.log('Episode sources response:', response.data);
+    console.log('External API Response Status:', response.status);
+    console.log('External API Response Data:', JSON.stringify(response.data, null, 2));
+    
     return response.data;
   } catch (error) {
-    console.error('Error fetching episode sources:', error.response?.data || error.message);
-    throw new Error(`Failed to fetch episode sources: ${error.message}`);
+    console.error('Service Error Details:');
+    console.error('Status:', error.response?.status);
+    console.error('Data:', error.response?.data);
+    console.error('Message:', error.message);
+    throw new Error(`Failed to fetch episode sources: ${error.response?.data?.message || error.message}`);
   }
 };
+
 
 exports.getCategory = async (category, page = 1) => {
   try {

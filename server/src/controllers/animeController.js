@@ -1,19 +1,19 @@
 const animeService = require('../services/animeService');
 
+// Get home page data
 exports.getHome = async (req, res, next) => {
   try {
-    console.log('📥 Home route hit');
     const data = await animeService.getHomeData();
     res.json({
       success: true,
       data
     });
   } catch (error) {
-    console.error('❌ Error in getHome controller:', error.message);
     next(error);
   }
 };
 
+// Search anime
 exports.searchAnime = async (req, res, next) => {
   try {
     const { q, page = 1 } = req.query;
@@ -35,6 +35,7 @@ exports.searchAnime = async (req, res, next) => {
   }
 };
 
+// Get anime details
 exports.getAnimeDetails = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -48,6 +49,7 @@ exports.getAnimeDetails = async (req, res, next) => {
   }
 };
 
+// Get anime episodes
 exports.getEpisodes = async (req, res, next) => {
   try {
     const { id } = req.params;
@@ -61,6 +63,7 @@ exports.getEpisodes = async (req, res, next) => {
   }
 };
 
+// Get episode streaming sources
 exports.getEpisodeSources = async (req, res, next) => {
   try {
     const { id, server = 'hd-1', category = 'sub' } = req.query;
@@ -72,20 +75,26 @@ exports.getEpisodeSources = async (req, res, next) => {
       });
     }
 
+    console.log('Fetching sources with params:', { id, server, category });
+
     const data = await animeService.getEpisodeSources(id, server, category);
     res.json({
       success: true,
       data
     });
   } catch (error) {
+    console.error('Controller error:', error);
     next(error);
   }
 };
 
+
+// Get category (most-popular, recently-updated, etc.)
 exports.getCategory = async (req, res, next) => {
   try {
     const { category } = req.params;
     const { page = 1 } = req.query;
+    
     const data = await animeService.getCategory(category, page);
     res.json({
       success: true,

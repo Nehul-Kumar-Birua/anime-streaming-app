@@ -296,3 +296,38 @@
     width: 100%;
   }
 }
+
+.loading-detail {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  font-family: monospace;
+  margin-top: var(--spacing-sm);
+}
+
+.error-suggestions {
+  text-align: left;
+  margin: var(--spacing-lg) 0;
+  padding: var(--spacing-md);
+  background: var(--bg-tertiary);
+  border-radius: var(--border-radius);
+}
+
+.error-suggestions strong {
+  color: var(--accent-primary);
+}
+
+.error-suggestions ul {
+  margin-top: var(--spacing-sm);
+  margin-left: var(--spacing-lg);
+}
+
+.error-suggestions li {
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
+}
+
+.episode-id-display {
+  font-family: monospace;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}

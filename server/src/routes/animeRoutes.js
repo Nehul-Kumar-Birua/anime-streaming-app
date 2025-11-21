@@ -3,9 +3,6 @@ const animeController = require('../controllers/animeController');
 
 const router = express.Router();
 
-// IMPORTANT: All paths here are relative to /api/anime
-// So router.get('/home') becomes /api/anime/home
-
 // Get home page data
 router.get('/home', animeController.getHome);
 
@@ -21,7 +18,7 @@ router.get('/:id/episodes', animeController.getEpisodes);
 // Get episode streaming sources
 router.get('/episode/sources', animeController.getEpisodeSources);
 
-// Get categories
+// Get category
 router.get('/category/:category', animeController.getCategory);
 
 module.exports = router;
